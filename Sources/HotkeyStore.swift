@@ -130,7 +130,6 @@ final class HotkeyStore: ObservableObject {
 
     func promptAccessibility() {
         permissionError = nil
-        _ = Permissions.promptAccessibility()
         do {
             try Permissions.openAccessibilitySettings()
         } catch {
@@ -147,6 +146,10 @@ final class HotkeyStore: ObservableObject {
             permissionError = error.localizedDescription
         }
         EventTap.shared.retryIfNeeded()
+    }
+
+    func relaunch() {
+        Permissions.relaunch()
     }
 
     func isConflict(_ chord: Chord, kind: ConflictKind) -> Bool {

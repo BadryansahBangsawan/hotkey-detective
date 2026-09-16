@@ -1,15 +1,18 @@
 import AppKit
 import ApplicationServices
+import CoreGraphics
 
 enum Permissions {
     static func isAccessibilityTrusted() -> Bool {
-        AXIsProcessTrusted()
+        AXIsProcessTrustedWithOptions(
+            [kAXTrustedCheckOptionPrompt.takeUnretainedValue(): false] as CFDictionary
+        )
     }
 
-    @discardableResult
-    static func promptAccessibility() -> Bool {
-        AXIsProcessTrustedWithOptions([kAXTrustedCheckOptionPrompt.takeUnretainedValue(): true] as CFDictionary)
+    static func isListenEventTrusted() -> Bool {
+        CGPreflightListenEventAccess()
     }
+
 
     static func openAccessibilitySettings() throws {
         try open(urlString: "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility")
@@ -17,6 +20,16 @@ enum Permissions {
 
     static func openInputMonitoringSettings() throws {
         try open(urlString: "x-apple.systempreferences:com.apple.preference.security?Privacy_ListenEvent")
+    }
+
+    static func relaunch() {
+        let path = Bundle.main.bundlePath
+        let escaped = "'" + path.replacingOccurrences(of: "'", with: "'\\''") + "'"
+        let proc = Process()
+        proc.executableURL = URL(fileURLWithPath: "/bin/zsh")
+        proc.arguments = ["-c", "sleep 0.4; /usr/bin/open \(escaped)"]
+        try? proc.run()
+        NSApp.terminate(nil)
     }
 
     private static func open(urlString: String) throws {

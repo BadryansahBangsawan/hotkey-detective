@@ -6,22 +6,23 @@ struct RootView: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 12) {
-                TextField("Search", text: $store.search)
-                    .textFieldStyle(.roundedBorder)
+            VStack(alignment: .leading, spacing: FunTheme.sectionSpacing) {
+                ExtraSearchField(title: "Search", prompt: "shortcut or app", text: $store.search)
 
-                HStack {
-                    Button(store.recording ? "Listening…" : "Record chord") {
-                        store.toggleRecording()
+                VStack(alignment: .leading, spacing: FunTheme.innerSpacing) {
+                    HStack {
+                        Button(store.recording ? "Listening…" : "Record chord") {
+                            store.toggleRecording()
+                        }
+                        .disabled(store.tapFailed && !store.recording)
+                        if store.stolenChord != nil {
+                            Button("Clear filter") { store.clearStolen() }
+                        }
                     }
-                    .disabled(store.tapFailed && !store.recording)
-                    if store.stolenChord != nil {
-                        Button("Clear filter") { store.clearStolen() }
+                    HStack {
+                        Button("Refresh") { store.refresh() }
+                        Button("Export TSV") { store.exportTSV() }
                     }
-                }
-                HStack {
-                    Button("Refresh") { store.refresh() }
-                    Button("Export TSV") { store.exportTSV() }
                 }
 
                 if let stolen = store.stolenChord {
@@ -38,6 +39,7 @@ struct RootView: View {
                     Label(err, systemImage: "exclamationmark.octagon.fill")
                         .foregroundStyle(.red)
                         .font(.caption)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
 
                 if !store.accessibilityTrusted {
@@ -48,32 +50,42 @@ struct RootView: View {
                     )
                 }
                 if store.tapFailed {
-                    VStack(alignment: .leading, spacing: 6) {
+                    VStack(alignment: .leading, spacing: FunTheme.innerSpacing) {
                         Label("Input Monitoring denied", systemImage: "exclamationmark.octagon.fill")
                             .foregroundStyle(.red)
-                        Button("Open Input Monitoring") { store.openInputMonitoring() }
+                            .fixedSize(horizontal: false, vertical: true)
+                        Text("If the switch is already on, turn it off and on, then Relaunch.")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                            .fixedSize(horizontal: false, vertical: true)
+                        HStack {
+                            Button("Open Input Monitoring") { store.openInputMonitoring() }
+                            Button("Relaunch") { store.relaunch() }
+                        }
                     }
                 }
 
                 systemSection
                 menusSection
                 capturesSection
+
+                ExtraSettingsFooter()
             }
-            .funPanel()
         }
-        .background(.regularMaterial)
         .animation(reduceMotion ? nil : FunTheme.spring, value: store.animationToken)
         .animation(reduceMotion ? nil : FunTheme.spring, value: store.search)
         .animation(reduceMotion ? nil : FunTheme.spring, value: store.recording)
+        .funPanel()
     }
 
     private var systemSection: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: FunTheme.innerSpacing) {
             Text("System")
                 .font(.headline)
             if let err = store.systemError {
                 Label(err, systemImage: "exclamationmark.octagon.fill")
                     .foregroundStyle(.red)
+                    .fixedSize(horizontal: false, vertical: true)
             } else if store.visibleSystem.isEmpty {
                 emptyState(
                     "No enabled system hotkeys.",
@@ -89,12 +101,13 @@ struct RootView: View {
     }
 
     private var menusSection: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: FunTheme.innerSpacing) {
             Text("Running app menus")
                 .font(.headline)
             if let err = store.menuError {
                 Label(err, systemImage: "exclamationmark.octagon.fill")
                     .foregroundStyle(.red)
+                    .fixedSize(horizontal: false, vertical: true)
             } else if !store.accessibilityTrusted {
                 emptyState(
                     "Grant Accessibility to read app menus.",
@@ -120,7 +133,7 @@ struct RootView: View {
     }
 
     private var capturesSection: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: FunTheme.innerSpacing) {
             Text("Captured events")
                 .font(.headline)
             if store.tapFailed {
@@ -164,7 +177,7 @@ struct RootView: View {
                 }
             }
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
+        .extraRowSurface()
     }
 
     private func emptyState(_ sentence: String, actionTitle: String, action: @escaping () -> Void) -> some View {
@@ -176,11 +189,18 @@ struct RootView: View {
     }
 
     private func permissionRow(title: String, button: String, action: @escaping () -> Void) -> some View {
-        VStack(alignment: .leading, spacing: 6) {
+        VStack(alignment: .leading, spacing: FunTheme.innerSpacing) {
             Text(title)
                 .font(.caption)
                 .foregroundStyle(.secondary)
-            Button(button, action: action)
+            Text("If the switch is already on, turn it off and on, then Relaunch.")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+            HStack {
+                Button(button, action: action)
+                Button("Relaunch") { store.relaunch() }
+            }
         }
     }
 }

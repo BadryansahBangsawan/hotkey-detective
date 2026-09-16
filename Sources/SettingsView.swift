@@ -55,10 +55,13 @@ struct SettingsView: View {
             }
 
             Section("Permissions") {
+                Text("If a switch is already on, turn it off and on, then Relaunch.")
+                    .foregroundStyle(.secondary)
                 Button("Open Accessibility") { store.promptAccessibility() }
                 Button("Open Input Monitoring") { store.openInputMonitoring() }
+                Button("Relaunch") { store.relaunch() }
                 if let err = store.permissionError {
-                    Label(err, systemImage: "exclamationmark.octagon.fill")
+                    Label(err, systemImage: "exclamationmark.triangle.fill")
                         .foregroundStyle(.red)
                 }
             }
