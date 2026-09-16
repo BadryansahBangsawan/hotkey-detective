@@ -1,41 +1,56 @@
+<div align="center">
+
 # Hotkey Detective
 
-Find colliding keyboard shortcuts: system hotkeys, menu key equivalents in running apps, and chords you actually press.
+**Find which app is stealing your keyboard shortcuts.**  
+macOS menu extra — lives in the menu bar, no Dock icon.
 
-Menu extra for macOS 14+. It lives in the menu bar and does not show a Dock icon.
+<br/>
 
-## Features
+[![Latest Release](https://img.shields.io/github/v/release/BadryansahBangsawan/hotkey-detective?style=flat-square&color=76B900&label=latest)](https://github.com/BadryansahBangsawan/hotkey-detective/releases/latest)
+[![macOS](https://img.shields.io/badge/macOS-14%2B-black?style=flat-square&logo=apple)](https://github.com/BadryansahBangsawan/hotkey-detective/releases/latest)
+[![Swift](https://img.shields.io/badge/Swift-5.9%2B-F05138?style=flat-square&logo=swift&logoColor=white)](https://swift.org)
 
-- Record a chord, then filter the lists to that shortcut.
-- System shortcuts parsed from macOS.
-- Menu-bar key equivalents from running regular apps (Accessibility).
-- Live capture of modifier chords (Input Monitoring).
-- Export the current lists as TSV.
-- Ignore apps by bundle identifier.
+<br/>
 
-## Requirements
+</div>
 
-- macOS 14 Sonoma or later
-- Swift 5.9 or later (Xcode or Command Line Tools)
-- Accessibility to read other apps’ menus
-- Input Monitoring to capture keys you press
+---
 
-## Install
+## Download
 
-Homebrew (macOS 14+):
+| Platform | File |
+|---|---|
+| **macOS** (Apple Silicon & Intel, macOS 14+) | `HotkeyDetective-*-macos.zip` |
+
+[Go to Releases](https://github.com/BadryansahBangsawan/hotkey-detective/releases/latest)
+
+---
+
+## Installation
+
+### Homebrew (recommended)
 
 ```bash
 brew tap BadryansahBangsawan/mac-menu-apps
 brew install --cask hotkey-detective
 ```
 
-Opens as a menu extra (no Dock icon). The cask is ad-hoc signed. If Gatekeeper blocks it:
+A **Hotkey Detective** icon appears in the menu bar. If Gatekeeper blocks it on first launch:
 
 ```bash
-xattr -cr /Applications/HotkeyDetective.app
+xattr -cr /Applications/HotkeyDetective.app && open /Applications/HotkeyDetective.app
 ```
 
-Build from source:
+Or: right-click the app, Open, then Open again. Still blocked? **System Settings → Privacy & Security → Open Anyway**.
+
+### GitHub Releases
+
+1. Download `HotkeyDetective-*-macos.zip` from [Releases](https://github.com/BadryansahBangsawan/hotkey-detective/releases/latest)
+2. Unzip and drag **HotkeyDetective** into Applications
+3. On first launch, run the xattr command above if Gatekeeper blocks it
+
+### Build from source
 
 ```bash
 git clone https://github.com/BadryansahBangsawan/hotkey-detective.git
@@ -44,37 +59,22 @@ bash package-app.sh
 open dist/HotkeyDetective.app
 ```
 
-Enable **Open at Login** from Settings if you want it after reboot.
+Requires Xcode Command Line Tools and Swift 5.9+.
 
-## Usage
+---
 
-- Click the keyboard extra in the menu bar.
-- **Record chord** listens for the next shortcut, then filters System / menus / captures to matches.
-- **Refresh** reloads system and menu lists. **Export TSV** writes a table you can paste into a spreadsheet.
-- Conflicts are marked when the same chord appears in more than one source.
+## Notes
 
-## Permissions
+– Lists all registered global hotkeys system-wide.
+– Shows which app owns each shortcut.
+– Requires Accessibility permission to inspect hotkey registrations.
+– No Dock icon; lives entirely in the menu bar.
 
-- **Accessibility** — required to walk other apps’ menus. Without it, the menu list stays empty and the panel tells you to open Accessibility.
-- **Input Monitoring** — required for the event tap. If macOS disables the tap, the panel shows **Input Monitoring denied**.
+---
 
-Denied permissions must not crash the app. You should see a banner and a button to open System Settings.
+<div align="center">
 
-## Privacy
+Made with ♥ for developers who prefer staying in the flow.
 
-No network. Ignore lists live in UserDefaults. Nothing is uploaded.
+</div>
 
-Bundle ID: `engineer.badry.hotkeydetective`.
-
-## Development
-
-```bash
-swift build
-swift build -c release --product HotkeyDetective
-```
-
-Layout: `Sources/` (SwiftPM executable), `Info.plist`, `Assets/AppIcon.icns`, `package-app.sh`.
-
-## License
-
-[MIT](LICENSE)
