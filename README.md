@@ -83,6 +83,9 @@ If the icon disappears after a reboot, the app may not be set to launch at login
 **Hotkey owner shows "Unknown"**  
 Some system-level shortcuts registered by macOS itself or kernel extensions are not attributed to a bundle ID. This is expected; the shortcut is still blocked at the OS level rather than by a user app.
 
+**Quit vs hide**  
+Closing the popover only dismisses the menu — the app stays in the menu bar. To fully quit, open the menu and choose **Quit Hotkey Detective** (or use Activity Monitor). Reloading Accessibility permissions also requires a full quit and reopen.
+
 ---
 
 <div align="center">
