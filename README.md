@@ -78,7 +78,7 @@ Requires Xcode Command Line Tools and Swift 5.9+.
 Hotkey Detective reads registrations through the Accessibility API. If the list is empty, grant Accessibility permission: **System Settings → Privacy & Security → Accessibility → toggle Hotkey Detective on**. Quit and reopen the app after granting.
 
 **Menu bar icon missing after install**  
-If the icon disappears after a reboot, the app may not be set to launch at login. Open the app once manually — it will re-add itself to the Login Items list automatically.
+If the icon disappears after a reboot, the app may not be set to launch at login. Open the app once manually — it will re-add itself to the Login Items list automatically. On macOS Sequoia and later, also check **System Settings → General → Login Items & Extensions** and allow Hotkey Detective if it was removed or blocked.
 
 **Hotkey owner shows "Unknown"**  
 Some system-level shortcuts registered by macOS itself or kernel extensions are not attributed to a bundle ID. This is expected; the shortcut is still blocked at the OS level rather than by a user app.
