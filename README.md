@@ -86,6 +86,9 @@ Some system-level shortcuts registered by macOS itself or kernel extensions are 
 **Quit vs hide**  
 Closing the popover only dismisses the menu — the app stays in the menu bar. To fully quit, open the menu and choose **Quit Hotkey Detective** (or use Activity Monitor). Reloading Accessibility permissions also requires a full quit and reopen.
 
+**Shortcut still stolen after identifying the owner**  
+Quitting the owner app is not always enough: some apps re-register global hotkeys as soon as they relaunch or when a helper process stays running. Quit the helper from Activity Monitor (search the same bundle name), or disable the conflicting shortcut inside that app’s own settings, then reopen Hotkey Detective to confirm the binding is gone.
+
 ---
 
 <div align="center">
